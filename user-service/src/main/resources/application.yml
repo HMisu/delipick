@@ -1,0 +1,30 @@
+server:
+  port: 19092
+
+spring:
+  application:
+    name: user-service
+  datasource:
+    url: ${POSTGRESQL_URL}
+    username: ${POSTGRESQL_PW}
+    password: ${POSTGRESQL_USERNAME}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_batch_fetch_size: 1000
+      open-in-view: false
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVICE_LOCAL_URL}
+
+jwt:
+  access-expiration: "#{60 * 60 * 1000}"
+  secret-key: ${JWT_SECRET_KEY}
