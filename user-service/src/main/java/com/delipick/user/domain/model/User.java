@@ -31,6 +31,7 @@ public class User extends BaseEntity {
     @Column
     private String address;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserRoleEnum role = UserRoleEnum.ROLE_USER;
