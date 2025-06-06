@@ -33,7 +33,7 @@ public class User extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private UserRoleEnum role;
+    private UserRoleEnum role = UserRoleEnum.ROLE_USER;
 
     @PrePersist
     public void prePersist() {
@@ -44,14 +44,12 @@ public class User extends BaseEntity {
 
     public static User create(String email,
                               String password,
-                              String role,
                               String phone,
                               String birthdate,
                               String address) {
         return User.builder()
                 .email(email)
                 .password(password)
-                .role(UserRoleEnum.valueOf(role))
                 .phone(phone)
                 .birthdate(birthdate)
                 .address(address)
