@@ -17,7 +17,7 @@ public class AuthService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public UserDto signup(@Valid SignupRequest request) {
+    public UserDto register(@Valid SignupRequest request) {
         String encodedPassword = passwordEncoder.encode(request.password());
 
         checkEmailDuplication(request.email());
