@@ -17,6 +17,7 @@ public class AuthService {
 
     private final PasswordEncoder passwordEncoder;
 
+
     public UserDto register(@Valid SignupRequest request) {
         String encodedPassword = passwordEncoder.encode(request.password());
 
@@ -27,13 +28,14 @@ public class AuthService {
                 request.email(),
                 encodedPassword,
                 request.phone(),
+                request.name(),
                 request.birthdate(),
                 request.address());
 
         User savedUser = userRepository.save(user);
         return UserDto.of(savedUser);
     }
-
+    
     private void checkEmailDuplication(String email) {
         if (userRepository.findByEmail(email).isPresent()) {
             throw new IllegalArgumentException("이미 가입된 이메일입니다.");

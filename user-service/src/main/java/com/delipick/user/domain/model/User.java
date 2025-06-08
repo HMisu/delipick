@@ -22,6 +22,9 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private String name;
+
     @Column(name = "phone_number", nullable = false)
     private String phone;
 
@@ -46,12 +49,14 @@ public class User extends BaseEntity {
     public static User create(String email,
                               String password,
                               String phone,
+                              String name,
                               String birthdate,
                               String address) {
         return User.builder()
                 .email(email)
                 .password(password)
                 .phone(phone)
+                .name(name)
                 .birthdate(birthdate)
                 .address(address)
                 .build();
@@ -59,10 +64,12 @@ public class User extends BaseEntity {
 
     public void update(String email,
                        String phone,
+                       String name,
                        String birthdate,
                        String address) {
         this.email = email;
         this.phone = phone;
+        this.name = name;
         this.birthdate = birthdate;
         this.address = address;
         markAsUpdated(String.valueOf(this.id));
