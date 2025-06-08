@@ -3,7 +3,6 @@ package com.delipick.user.presentation.controller;
 import com.delipick.user.application.dto.UserDto;
 import com.delipick.user.application.service.AuthService;
 import com.delipick.user.common.dto.ApiResponse;
-import com.delipick.user.presentation.request.LoginRequest;
 import com.delipick.user.presentation.request.SignupRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,12 +23,5 @@ public class AuthController {
         UserDto createdUser = authService.register(signupRequest);
 
         return ResponseEntity.ok(ApiResponse.success(createdUser));
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<ApiResponse<String>> login(@Valid @RequestBody LoginRequest loginRequest) {
-        authService.login(loginRequest);
-
-        return ResponseEntity.ok(ApiResponse.success("User created successfully"));
     }
 }
