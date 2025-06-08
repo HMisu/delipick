@@ -10,16 +10,25 @@ spring:
     redis:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT}
+      username: ${REDIS_USERNAME}
+      password: ${REDIS_PW}
+
   cloud:
     gateway:
-      discovery:
-        locator:
-          enabled: true
-      routes:
-        - id: user-service
-          uri: lb://user-service
-          predicates:
-            - Path=/api/users/**, /api/auth/**
+      server:
+        webflux:
+          routes:
+            - id: user-service-users
+              uri: lb://user-service
+              predicates:
+                - Path=/api/users/**
+            - id: user-service-auth
+              uri: lb://user-service
+              predicates:
+                - Path=/api/auth/**
+          discovery:
+            locator:
+              enabled: true
 
 eureka:
   client:
@@ -27,5 +36,4 @@ eureka:
       defaultZone: ${EUREKA_SERVICE_LOCAL_URL}
 
 jwt:
-  secret:
-    key: ${JWT_SECRET_KEY}
+  secret-key: ${JWT_SECRET_KEY}

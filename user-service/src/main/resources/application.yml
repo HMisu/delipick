@@ -6,8 +6,8 @@ spring:
     name: user-service
   datasource:
     url: ${POSTGRESQL_URL}
-    username: ${POSTGRESQL_PW}
-    password: ${POSTGRESQL_USERNAME}
+    username: ${POSTGRESQL_USERNAME}
+    password: ${POSTGRESQL_PW}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
