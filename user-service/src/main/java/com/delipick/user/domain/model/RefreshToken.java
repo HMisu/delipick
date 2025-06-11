@@ -10,7 +10,7 @@ import org.springframework.data.redis.core.index.Indexed;
 
 @Getter
 @Setter
-@RedisHash(value = "refreshToken", timeToLive = 60 * 60 * 24 * 3)
+@RedisHash(value = "refreshToken", timeToLive = 60 * 60 * 24 * 14)
 public class RefreshToken {
     @Id
     private String refreshToken;
