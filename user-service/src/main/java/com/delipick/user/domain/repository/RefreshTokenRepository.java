@@ -9,5 +9,5 @@ public interface RefreshTokenRepository {
 
     void deleteByMemberId(String memberId);
 
-    void save(RefreshToken refreshToken);
+    RefreshToken save(RefreshToken refreshToken);
 }
