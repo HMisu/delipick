@@ -19,9 +19,6 @@ import javax.crypto.SecretKey;
 @Slf4j
 @Component
 public class LocalJwtAuthenticationFilter implements GlobalFilter {
-
-    private static final String BEARER_PREFIX = "Bearer ";
-
     @Value("${jwt.secret-key}")
     private String secretKey;
 
@@ -58,7 +55,7 @@ public class LocalJwtAuthenticationFilter implements GlobalFilter {
                     .verifyWith(key)
                     .build().parseSignedClaims(token);
 
-            Claims claims = claimsJws.getBody();
+            Claims claims = claimsJws.getPayload();
             exchange.getRequest().mutate()
                     .header("X-User-Id", claims.getSubject())
                     .header("X-User-Name", claims.get("name").toString())
