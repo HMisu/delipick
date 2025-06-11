@@ -20,12 +20,15 @@ import javax.crypto.SecretKey;
 @Component
 public class LocalJwtAuthenticationFilter implements GlobalFilter {
 
+    private static final String BEARER_PREFIX = "Bearer ";
+
     @Value("${jwt.secret-key}")
     private String secretKey;
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         String path = exchange.getRequest().getURI().getPath();
+
         if (path.equals("/api/auth/login") || path.equals("/api/auth/register")) {
             return chain.filter(exchange);
         }
@@ -40,7 +43,7 @@ public class LocalJwtAuthenticationFilter implements GlobalFilter {
         return chain.filter(exchange);
     }
 
-    private String extractToken(ServerWebExchange exchange) {
+    public String extractToken(ServerWebExchange exchange) {
         String authHeader = exchange.getRequest().getHeaders().getFirst("Authorization");
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             return authHeader.substring(7);
