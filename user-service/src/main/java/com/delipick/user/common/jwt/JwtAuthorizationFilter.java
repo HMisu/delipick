@@ -1,6 +1,7 @@
 package com.delipick.user.common.jwt;
 
 
+import com.delipick.user.application.dto.UserDto;
 import com.delipick.user.infrastructure.security.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -24,26 +25,35 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private final UserDetailsServiceImpl userDetailsService;
+    private final JwtUtil jwtUtil;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
-        if (request.getRequestURI().startsWith("/api/auth/")) {
+        String uri = request.getRequestURI();
+        if (uri.equals("/api/auth/login") || uri.equals("/api/auth/register")) {
             chain.doFilter(request, response);
             return;
         }
 
-        log.info("request : {}", request.getHeader("X-User-Id"));
-        String userId = request.getHeader("X-User-Id");
-        String email = request.getHeader("X-User-Email");
-        String userRole = request.getHeader("X-User-Role");
+        String authorizationHeader = request.getHeader("Authorization");
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            chain.doFilter(request, response);
+            return;
+        }
 
-        if (userId != null && userRole != null && email != null) {
-            try {
-                setAuthentication(email);
-            } catch (Exception e) {
-                log.error("JWT 인증 실패: {}", e.getMessage());
-                // 인증 실패해도 계속 진행
-            }
+        String token = authorizationHeader.substring(7);
+
+        if (jwtUtil.validateToken(token)) {
+            chain.doFilter(request, response);
+            return;
+        }
+
+        try {
+            UserDto userDto = jwtUtil.getUserInfoFromToken(token);
+            setAuthentication(userDto.getEmail());
+        } catch (Exception e) {
+            log.error("JWT 인증 실패: {}", e.getMessage());
+            // 인증 실패해도 계속 진행
         }
 
         chain.doFilter(request, response);

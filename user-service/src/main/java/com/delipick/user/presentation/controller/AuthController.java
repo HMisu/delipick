@@ -1,9 +1,11 @@
 package com.delipick.user.presentation.controller;
 
+import com.delipick.user.application.dto.TokenResponseDto;
 import com.delipick.user.application.dto.UserDto;
 import com.delipick.user.application.service.AuthService;
 import com.delipick.user.common.dto.ApiResponse;
 import com.delipick.user.presentation.request.SignupRequest;
+import com.delipick.user.presentation.request.TokenRequestDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,5 +25,12 @@ public class AuthController {
         UserDto createdUser = authService.register(signupRequest);
 
         return ResponseEntity.ok(ApiResponse.success(createdUser));
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refreshToken(@RequestBody TokenRequestDto requestDto) {
+        TokenResponseDto responseDto = authService.refreshToken(requestDto);
+        
+        return ResponseEntity.ok(responseDto);
     }
 }
