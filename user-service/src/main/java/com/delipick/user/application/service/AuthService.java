@@ -63,7 +63,7 @@ public class AuthService {
         String accessToken = requestDto.accessToken();
         String refreshToken = requestDto.refreshToken();
 
-        if (!jwtUtil.validateToken(refreshToken)) {
+        if (jwtUtil.isTokenInvalid(refreshToken)) {
             throw new CustomException(ErrorCode.INVALID_REFRESH_TOKEN);
         }
 

@@ -66,21 +66,22 @@ public class JwtUtil {
         return savedToken.getRefreshToken();
     }
 
-    public boolean validateToken(String token) {
+    public boolean isTokenInvalid(String token) {
         try {
             Jwts.parser()
                     .verifyWith(secretKey)
                     .build()
                     .parseSignedClaims(token);
-            return true;
+            return false;  // 유효하면 false (invalid 아님)
         } catch (ExpiredJwtException e) {
             log.info("JWT expired: {}", e.getMessage());
-            return false;
+            return true;   // 유효하지 않음
         } catch (Exception e) {
             log.warn("Invalid JWT: {}", e.getMessage());
-            return false;
+            return true;   // 유효하지 않음
         }
     }
+
 
     public UserDto getUserInfoFromToken(String token) {
         Claims claims = parseClaims(token);
