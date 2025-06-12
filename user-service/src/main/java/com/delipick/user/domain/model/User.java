@@ -39,20 +39,13 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private UserRoleEnum role = UserRoleEnum.ROLE_USER;
 
-    @PrePersist
-    public void prePersist() {
-        if (getCreatedBy() == null) {
-            markAsCreated(String.valueOf(this.id));
-        }
-    }
-
     public static User create(String email,
                               String password,
                               String phone,
                               String name,
                               String birthdate,
                               String address) {
-        return User.builder()
+        User user = User.builder()
                 .email(email)
                 .password(password)
                 .phone(phone)
@@ -60,6 +53,9 @@ public class User extends BaseEntity {
                 .birthdate(birthdate)
                 .address(address)
                 .build();
+
+        user.markAsCreated(email);
+        return user;
     }
 
     public void update(String email,
@@ -72,7 +68,7 @@ public class User extends BaseEntity {
         this.name = name;
         this.birthdate = birthdate;
         this.address = address;
-        markAsUpdated(String.valueOf(this.id));
+        markAsUpdated(email);
     }
 
     public void updateRole(UserRoleEnum role) {

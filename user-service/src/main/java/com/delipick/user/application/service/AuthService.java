@@ -31,7 +31,6 @@ public class AuthService {
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
 
-
     public UserDto register(@Valid SignupRequest request) {
         String encodedPassword = passwordEncoder.encode(request.password());
 
