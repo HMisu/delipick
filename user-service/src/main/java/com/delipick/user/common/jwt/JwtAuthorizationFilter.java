@@ -43,7 +43,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         String token = authorizationHeader.substring(7);
 
-        if (jwtUtil.validateToken(token)) {
+        if (!jwtUtil.validateToken(token)) {
             chain.doFilter(request, response);
             return;
         }
