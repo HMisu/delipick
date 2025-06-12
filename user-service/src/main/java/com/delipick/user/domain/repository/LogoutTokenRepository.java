@@ -4,4 +4,6 @@ import com.delipick.user.domain.model.LogoutToken;
 
 public interface LogoutTokenRepository {
     LogoutToken save(LogoutToken logoutToken);
+
+    boolean existsById(String accessToken);
 }

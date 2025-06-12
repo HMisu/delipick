@@ -3,13 +3,16 @@ package com.delipick.user.application.service;
 import com.delipick.user.application.dto.TokenResponseDto;
 import com.delipick.user.application.dto.UserDto;
 import com.delipick.user.common.jwt.JwtUtil;
+import com.delipick.user.domain.model.LogoutToken;
 import com.delipick.user.domain.model.User;
+import com.delipick.user.domain.repository.LogoutTokenRepository;
 import com.delipick.user.domain.repository.RefreshTokenRepository;
 import com.delipick.user.domain.repository.UserRepository;
 import com.delipick.user.presentation.exception.CustomException;
 import com.delipick.user.presentation.exception.enums.ErrorCode;
 import com.delipick.user.presentation.request.SignupRequest;
 import com.delipick.user.presentation.request.TokenRequestDto;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +26,7 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final LogoutTokenRepository logoutTokenRepository;
 
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
@@ -84,6 +88,20 @@ public class AuthService {
     private String maskToken(String token) {
         if (token.length() <= 10) return token;
         return token.substring(0, 5) + "****" + token.substring(token.length() - 5);
+    }
+
+    public void logout(HttpServletRequest request) {
+        String authorizationHeader = request.getHeader("Authorization");
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            return;
+        }
+        String accessToken = authorizationHeader.substring(7);
+        log.info("accessToken: {}", maskToken(accessToken));
+        try {
+            logoutTokenRepository.save(new LogoutToken(accessToken));
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.LOGOUT_TOKEN_SAVE_FAILURE);
+        }
     }
 
 }

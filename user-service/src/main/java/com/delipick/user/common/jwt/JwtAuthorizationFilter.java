@@ -2,7 +2,9 @@ package com.delipick.user.common.jwt;
 
 
 import com.delipick.user.application.dto.UserDto;
+import com.delipick.user.domain.repository.LogoutTokenRepository;
 import com.delipick.user.infrastructure.security.UserDetailsServiceImpl;
+import com.delipick.user.presentation.exception.enums.ErrorCode;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,6 +28,7 @@ import java.io.IOException;
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private final UserDetailsServiceImpl userDetailsService;
     private final JwtUtil jwtUtil;
+    private final LogoutTokenRepository logoutTokenRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
@@ -45,6 +48,18 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         if (jwtUtil.isTokenInvalid(token)) {
             chain.doFilter(request, response);
+            return;
+        }
+
+        if (logoutTokenRepository.existsById(token)) {
+            log.info("블랙리스트에 있는 토큰으로 요청이 들어왔습니다.");
+            response.setStatus(ErrorCode.LOGOUT_TOKEN_BLACKLISTED.getStatus());
+            response.setContentType("application/json;charset=UTF-8");
+            String body = String.format("{\"code\":\"%s\", \"message\":\"%s\"}",
+                    ErrorCode.LOGOUT_TOKEN_BLACKLISTED.getCode(),
+                    ErrorCode.LOGOUT_TOKEN_BLACKLISTED.getMessage());
+            response.getWriter().write(body);
+            response.getWriter().flush();
             return;
         }
 
