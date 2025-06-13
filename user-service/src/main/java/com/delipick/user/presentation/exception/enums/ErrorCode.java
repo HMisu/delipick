@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
 
     INVALID_INPUT(400, "E4001", "잘못된 요청입니다."),
+    INVALID_ROLE(400, "E4003", "유효하지 않은 역할입니다."),
     INVALID_REFRESH_TOKEN(401, "E4011", "리프레시 토큰이 유효하지 않습니다."),
     UNAUTHORIZED(401, "E4012", "인증이 필요합니다."),
     LOGOUT_TOKEN_BLACKLISTED(401, "E4013", "로그아웃된 토큰으로 접근할 수 없습니다."),
