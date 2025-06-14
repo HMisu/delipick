@@ -31,17 +31,17 @@ public class UserController {
     }
 
     @PatchMapping("/me")
-    public ResponseEntity<ApiResponse<UserDto>> updatedMyInfo(@RequestHeader("X-User-Id") String userId,
-                                                              @RequestHeader("X-Role") String role,
-                                                              @Valid @RequestBody UpdateMyInfoRequest updateMyInfoRequest) {
+    public ResponseEntity<ApiResponse<String>> updatedMyInfo(@RequestHeader("X-User-Id") String userId,
+                                                             @RequestHeader("X-Role") String role,
+                                                             @Valid @RequestBody UpdateMyInfoRequest updateMyInfoRequest) {
         userService.updatedMyInfo(userId, role, updateMyInfoRequest);
         return ResponseEntity.ok(ApiResponse.success("회원 정보 수정이 완료되었습니다."));
     }
 
     @PatchMapping("/password")
-    public ResponseEntity<ApiResponse<UserDto>> updatedPassword(@RequestHeader("X-User-Id") String userId,
-                                                                @RequestHeader("X-Role") String role,
-                                                                @Valid @RequestBody UpdatePasswordRequest updatePasswordRequest) {
+    public ResponseEntity<ApiResponse<String>> updatedPassword(@RequestHeader("X-User-Id") String userId,
+                                                               @RequestHeader("X-Role") String role,
+                                                               @Valid @RequestBody UpdatePasswordRequest updatePasswordRequest) {
         userService.updatedPassword(userId, role, updatePasswordRequest);
         return ResponseEntity.ok(ApiResponse.success("회원 정보 수정이 완료되었습니다."));
     }
