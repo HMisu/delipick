@@ -16,10 +16,18 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import javax.crypto.SecretKey;
+import java.util.Set;
 
 @Slf4j
 @Component
 public class LocalJwtAuthenticationFilter implements GlobalFilter {
+
+    private static final Set<String> PUBLIC_PATHS = Set.of(
+            "/api/auth/login",
+            "/api/auth/register",
+            "/api/auth/reactivate"
+    );
+
     @Value("${jwt.secret-key}")
     private String secretKey;
 
@@ -27,7 +35,7 @@ public class LocalJwtAuthenticationFilter implements GlobalFilter {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         String path = exchange.getRequest().getURI().getPath();
 
-        if (path.equals("/api/auth/login") || path.equals("/api/auth/register")) {
+        if (PUBLIC_PATHS.contains(path)) {
             return chain.filter(exchange);
         }
 

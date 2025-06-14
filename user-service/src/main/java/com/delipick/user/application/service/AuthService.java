@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -110,4 +111,15 @@ public class AuthService {
         }
     }
 
+    @Transactional
+    public void reactivateUser(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        if (!user.isDeleted()) {
+            throw new CustomException(ErrorCode.USER_ALREADY_ACTIVE);
+        }
+
+        user.reactivateUser();
+    }
 }

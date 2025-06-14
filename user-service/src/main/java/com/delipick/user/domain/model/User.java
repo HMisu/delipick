@@ -74,8 +74,11 @@ public class User extends BaseEntity {
         markAsUpdated(this.email);
     }
 
-
     public void updateRole(UserRoleEnum role) {
         this.role = role;
+    }
+
+    public void reactivateUser() {
+        restore();
     }
 }

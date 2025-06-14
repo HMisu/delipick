@@ -20,12 +20,20 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Set;
 
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
+
+    private static final Set<String> PUBLIC_PATHS = Set.of(
+            "/api/auth/login",
+            "/api/auth/register",
+            "/api/auth/reactivate"
+    );
+
     private final UserDetailsServiceImpl userDetailsService;
     private final JwtUtil jwtUtil;
     private final LogoutTokenRepository logoutTokenRepository;
@@ -33,7 +41,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         String uri = request.getRequestURI();
-        if (uri.equals("/api/auth/login") || uri.equals("/api/auth/register")) {
+
+        if (PUBLIC_PATHS.contains(uri)) {
             chain.doFilter(request, response);
             return;
         }

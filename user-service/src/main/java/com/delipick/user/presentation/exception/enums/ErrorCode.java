@@ -14,6 +14,7 @@ public enum ErrorCode {
     INVALID_REFRESH_TOKEN(401, "E4011", "리프레시 토큰이 유효하지 않습니다."),
     UNAUTHORIZED(401, "E4012", "인증이 필요합니다."),
     LOGOUT_TOKEN_BLACKLISTED(401, "E4013", "로그아웃된 토큰으로 접근할 수 없습니다."),
+    USER_DELETED(401, "E4014", "탈퇴 처리된 회원입니다."),
     FORBIDDEN_NOT_SELF(403, "E4031", "본인의 정보에만 접근할 수 있습니다."),
     FORBIDDEN_ADMIN_ONLY(403, "E4032", "관리자만 접근할 수 있는 기능입니다."),
     USER_NOT_FOUND(404, "E4041", "해당 사용자를 찾을 수 없습니다."),
@@ -21,6 +22,7 @@ public enum ErrorCode {
     EMAIL_ALREADY_EXISTS(409, "E4091", "이미 가입된 이메일입니다."),
     PHONE_ALREADY_EXISTS(409, "E4092", "이미 가입된 전화번호입니다."),
     EMAIL_DELETED_ACCOUNT(409, "E4093", "탈퇴한 이메일입니다. 복구를 원하시면 고객센터로 문의해주세요."),
+    USER_ALREADY_ACTIVE(409, "E4094", "이미 활성화된 계정입니다."),
     LOGOUT_TOKEN_SAVE_FAILURE(500, "E5002", "로그아웃 토큰 저장에 실패했습니다."),
     USER_DELETION_FAILED(500, "E5003", "회원 탈퇴에 실패했습니다."),
     INTERNAL_ERROR(500, "E5001", "서버 내부 오류입니다.");
