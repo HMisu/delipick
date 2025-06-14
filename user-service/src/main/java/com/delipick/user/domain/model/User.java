@@ -69,6 +69,12 @@ public class User extends BaseEntity {
         markAsUpdated(this.email);
     }
 
+    public void updatePassword(String password) {
+        this.password = password;
+        markAsUpdated(this.email);
+    }
+
+
     public void updateRole(UserRoleEnum role) {
         this.role = role;
     }

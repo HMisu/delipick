@@ -4,6 +4,7 @@ import com.delipick.user.application.dto.UserDto;
 import com.delipick.user.application.service.UserService;
 import com.delipick.user.common.dto.ApiResponse;
 import com.delipick.user.presentation.request.UpdateMyInfoRequest;
+import com.delipick.user.presentation.request.UpdatePasswordRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,14 @@ public class UserController {
                                                               @RequestHeader("X-Role") String role,
                                                               @Valid @RequestBody UpdateMyInfoRequest updateMyInfoRequest) {
         userService.updatedMyInfo(userId, role, updateMyInfoRequest);
+        return ResponseEntity.ok(ApiResponse.success("회원 정보 수정이 완료되었습니다."));
+    }
+
+    @PatchMapping("/password")
+    public ResponseEntity<ApiResponse<UserDto>> updatedPassword(@RequestHeader("X-User-Id") String userId,
+                                                                @RequestHeader("X-Role") String role,
+                                                                @Valid @RequestBody UpdatePasswordRequest updatePasswordRequest) {
+        userService.updatedPassword(userId, role, updatePasswordRequest);
         return ResponseEntity.ok(ApiResponse.success("회원 정보 수정이 완료되었습니다."));
     }
 }
