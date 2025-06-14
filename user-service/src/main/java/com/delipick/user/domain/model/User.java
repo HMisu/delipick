@@ -58,17 +58,15 @@ public class User extends BaseEntity {
         return user;
     }
 
-    public void update(String email,
-                       String phone,
+    public void update(String phone,
                        String name,
                        String birthdate,
                        String address) {
-        this.email = email;
         this.phone = phone;
         this.name = name;
         this.birthdate = birthdate;
         this.address = address;
-        markAsUpdated(email);
+        markAsUpdated(this.email);
     }
 
     public void updateRole(UserRoleEnum role) {
