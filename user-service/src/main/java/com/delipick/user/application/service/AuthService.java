@@ -19,6 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -50,15 +52,20 @@ public class AuthService {
     }
 
     private void checkEmailDuplication(String email) {
-        if (userRepository.findByEmail(email).isPresent()) {
-            throw new IllegalArgumentException("이미 가입된 이메일입니다.");
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            if (user.isDeleted()) {
+                throw new CustomException(ErrorCode.EMAIL_DELETED_ACCOUNT);
+            } else {
+                throw new CustomException(ErrorCode.EMAIL_ALREADY_EXISTS);
+            }
         }
     }
 
     private void checkPhoneDuplication(String phone) {
         if (userRepository.findByPhone(phone).isPresent()) {
-            throw new IllegalArgumentException("이미 가입된 전화번호입니다.");
-
+            throw new CustomException(ErrorCode.PHONE_ALREADY_EXISTS);
         }
     }
 

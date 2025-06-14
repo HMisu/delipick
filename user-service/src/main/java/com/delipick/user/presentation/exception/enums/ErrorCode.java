@@ -20,6 +20,7 @@ public enum ErrorCode {
     REFRESH_TOKEN_NOT_FOUND(404, "E4042", "저장된 리프레시 토큰이 없거나 로그아웃된 상태입니다."),
     EMAIL_ALREADY_EXISTS(409, "E4091", "이미 가입된 이메일입니다."),
     PHONE_ALREADY_EXISTS(409, "E4092", "이미 가입된 전화번호입니다."),
+    EMAIL_DELETED_ACCOUNT(409, "E4093", "탈퇴한 이메일입니다. 복구를 원하시면 고객센터로 문의해주세요."),
     LOGOUT_TOKEN_SAVE_FAILURE(500, "E5002", "로그아웃 토큰 저장에 실패했습니다."),
     USER_DELETION_FAILED(500, "E5003", "회원 탈퇴에 실패했습니다."),
     INTERNAL_ERROR(500, "E5001", "서버 내부 오류입니다.");
