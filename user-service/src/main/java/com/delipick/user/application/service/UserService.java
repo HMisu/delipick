@@ -56,7 +56,6 @@ public class UserService {
             throw new CustomException(ErrorCode.INCORRECT_NEW_PASSWORD_CONFIRM);
         }
 
-        log.info("userId: " + userId);
         User user = findUserById(userId);
 
         if (!passwordEncoder.matches(updatePasswordRequest.currentPassword(), user.getPassword())) {
@@ -89,4 +88,13 @@ public class UserService {
         return userRepository.findById(Long.valueOf(userId))
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
     }
+
+    public boolean isEmailExists(String email) {
+        return userRepository.existsByEmailAndIsDeletedFalse(email);
+    }
+
+    public boolean isPhoneExists(String phone) {
+        return userRepository.existsByPhoneAndIsDeletedFalse(phone);
+    }
+
 }

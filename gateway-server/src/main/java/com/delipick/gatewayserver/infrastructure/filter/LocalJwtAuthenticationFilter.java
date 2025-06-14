@@ -25,7 +25,9 @@ public class LocalJwtAuthenticationFilter implements GlobalFilter {
     private static final Set<String> PUBLIC_PATHS = Set.of(
             "/api/auth/login",
             "/api/auth/register",
-            "/api/auth/reactivate"
+            "/api/auth/reactivate",
+            "/api/users/email-exists",
+            "/api/users/phone-exists"
     );
 
     @Value("${jwt.secret-key}")

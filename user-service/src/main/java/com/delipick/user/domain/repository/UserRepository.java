@@ -13,5 +13,9 @@ public interface UserRepository {
 
     Optional<User> findByPhone(String phone);
 
+    boolean existsByEmailAndIsDeletedFalse(String email);
+
+    boolean existsByPhoneAndIsDeletedFalse(String phone);
+
     User save(User user);
 }
