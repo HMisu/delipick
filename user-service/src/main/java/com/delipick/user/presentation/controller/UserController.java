@@ -1,13 +1,13 @@
 package com.delipick.user.presentation.controller;
 
+import com.delipick.user.application.dto.UserDto;
 import com.delipick.user.application.service.UserService;
 import com.delipick.user.common.dto.ApiResponse;
+import com.delipick.user.presentation.request.UpdateMyInfoRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,5 +20,20 @@ public class UserController {
                                                           @RequestHeader("X-Role") String role) {
         userService.withdrawal(userId, role);
         return ResponseEntity.ok(ApiResponse.success("회원 탈퇴가 완료되었습니다."));
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<ApiResponse<UserDto>> getMyInfo(@RequestHeader("X-User-Id") String userId,
+                                                          @RequestHeader("X-Role") String role) {
+        UserDto userDto = userService.getMyInfo(userId, role);
+        return ResponseEntity.ok(ApiResponse.success(userDto));
+    }
+
+    @PatchMapping("/me")
+    public ResponseEntity<ApiResponse<UserDto>> updatedMyInfo(@RequestHeader("X-User-Id") String userId,
+                                                              @RequestHeader("X-Role") String role,
+                                                              @Valid @RequestBody UpdateMyInfoRequest updateMyInfoRequest) {
+        userService.updatedMyInfo(userId, role, updateMyInfoRequest);
+        return ResponseEntity.ok(ApiResponse.success("회원 정보 수정이 완료되었습니다."));
     }
 }
