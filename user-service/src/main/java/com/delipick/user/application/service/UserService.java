@@ -1,11 +1,14 @@
 package com.delipick.user.application.service;
 
 import com.delipick.user.application.dto.UserDto;
+import com.delipick.user.domain.enums.EmailVerificationPurposeEnum;
 import com.delipick.user.domain.enums.UserRoleEnum;
 import com.delipick.user.domain.model.User;
+import com.delipick.user.domain.repository.EmailAuthRepository;
 import com.delipick.user.domain.repository.UserRepository;
 import com.delipick.user.presentation.exception.CustomException;
 import com.delipick.user.presentation.exception.enums.ErrorCode;
+import com.delipick.user.presentation.request.ResetPasswordRequest;
 import com.delipick.user.presentation.request.UpdateMyInfoRequest;
 import com.delipick.user.presentation.request.UpdatePasswordRequest;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final EmailAuthRepository emailAuthRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -97,4 +101,24 @@ public class UserService {
         return userRepository.existsByPhoneAndIsDeletedFalse(phone);
     }
 
+    @Transactional
+    public void resetPassword(ResetPasswordRequest resetPasswordRequest) {
+        if (!resetPasswordRequest.newPassword().equals(resetPasswordRequest.newPasswordConfirm())) {
+            throw new CustomException(ErrorCode.INCORRECT_NEW_PASSWORD_CONFIRM);
+        }
+
+        verifyEmailAuth(resetPasswordRequest.email(), resetPasswordRequest.verifyCode());
+
+        User user = userRepository.findByEmail(resetPasswordRequest.email())
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        String encodedPassword = passwordEncoder.encode(resetPasswordRequest.newPassword());
+        user.updatePassword(encodedPassword);
+    }
+
+    private void verifyEmailAuth(String email, String code) {
+        emailAuthRepository.findByEmailAndPurpose(email, EmailVerificationPurposeEnum.RESET_PASSWORD)
+                .filter(auth -> auth.getVerifyCode().equals(code))
+                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_VERIFICATION_CODE));
+    }
 }

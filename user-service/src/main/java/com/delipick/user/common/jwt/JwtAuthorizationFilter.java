@@ -34,6 +34,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             "/api/auth/reactivate",
             "/api/users/email-exists",
             "/api/users/phone-exists",
+            "/api/users/password/reset",
             "/api/email-auth",
             "/api/email-auth/verify"
     );

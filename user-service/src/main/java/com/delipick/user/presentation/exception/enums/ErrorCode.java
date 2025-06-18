@@ -11,6 +11,7 @@ public enum ErrorCode {
     INCORRECT_CURRENT_PASSWORD(400, "E4003", "현재 비밀번호가 일치하지 않습니다."),
     INCORRECT_NEW_PASSWORD_CONFIRM(400, "E4004", "새 비밀번호와 확인 비밀번호가 일치하지 않습니다."),
     SAME_AS_CURRENT_PASSWORD(400, "E4005", "현재 비밀번호와 새 비밀번호는 달라야 합니다."),
+    INVALID_VERIFICATION_CODE(400, "E4006", "이메일 인증 코드가 유효하지 않습니다."),
     INVALID_REFRESH_TOKEN(401, "E4011", "리프레시 토큰이 유효하지 않습니다."),
     UNAUTHORIZED(401, "E4012", "인증이 필요합니다."),
     LOGOUT_TOKEN_BLACKLISTED(401, "E4013", "로그아웃된 토큰으로 접근할 수 없습니다."),

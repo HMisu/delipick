@@ -3,6 +3,7 @@ package com.delipick.user.presentation.controller;
 import com.delipick.user.application.dto.UserDto;
 import com.delipick.user.application.service.UserService;
 import com.delipick.user.common.dto.ApiResponse;
+import com.delipick.user.presentation.request.ResetPasswordRequest;
 import com.delipick.user.presentation.request.UpdateMyInfoRequest;
 import com.delipick.user.presentation.request.UpdatePasswordRequest;
 import jakarta.validation.Valid;
@@ -44,6 +45,12 @@ public class UserController {
                                                                @Valid @RequestBody UpdatePasswordRequest updatePasswordRequest) {
         userService.updatedPassword(userId, role, updatePasswordRequest);
         return ResponseEntity.ok(ApiResponse.success("회원 정보 수정이 완료되었습니다."));
+    }
+
+    @PostMapping("/password/reset")
+    public ResponseEntity<ApiResponse<String>> resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
+        userService.resetPassword(resetPasswordRequest);
+        return ResponseEntity.ok(ApiResponse.success("회원 변경이 완료되었습니다."));
     }
 
     @GetMapping("/email-exists")
