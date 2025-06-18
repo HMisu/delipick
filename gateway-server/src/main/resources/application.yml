@@ -26,6 +26,10 @@ spring:
               uri: lb://user-service
               predicates:
                 - Path=/api/auth/**
+            - id: user-service-email-auth
+              uri: lb://user-service
+              predicates:
+                - Path=/api/email-auth/**
           discovery:
             locator:
               enabled: true

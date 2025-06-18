@@ -1,7 +1,10 @@
 package com.delipick.user.common.jwt;
 
 
+import com.delipick.user.application.dto.UserDto;
+import com.delipick.user.domain.repository.LogoutTokenRepository;
 import com.delipick.user.infrastructure.security.UserDetailsServiceImpl;
+import com.delipick.user.presentation.exception.enums.ErrorCode;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,33 +20,69 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Set;
 
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
+
+    private static final Set<String> PUBLIC_PATHS = Set.of(
+            "/api/auth/login",
+            "/api/auth/register",
+            "/api/auth/reactivate",
+            "/api/users/email-exists",
+            "/api/users/phone-exists",
+            "/api/users/password/reset",
+            "/api/email-auth",
+            "/api/email-auth/verify"
+    );
+
     private final UserDetailsServiceImpl userDetailsService;
+    private final JwtUtil jwtUtil;
+    private final LogoutTokenRepository logoutTokenRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
-        if (request.getRequestURI().startsWith("/api/auth/")) {
+        String uri = request.getRequestURI();
+
+        if (PUBLIC_PATHS.contains(uri)) {
             chain.doFilter(request, response);
             return;
         }
 
-        log.info("request : {}", request.getHeader("X-User-Id"));
-        String userId = request.getHeader("X-User-Id");
-        String email = request.getHeader("X-User-Email");
-        String userRole = request.getHeader("X-User-Role");
+        String authorizationHeader = request.getHeader("Authorization");
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            chain.doFilter(request, response);
+            return;
+        }
 
-        if (userId != null && userRole != null && email != null) {
-            try {
-                setAuthentication(email);
-            } catch (Exception e) {
-                log.error("JWT 인증 실패: {}", e.getMessage());
-                // 인증 실패해도 계속 진행
-            }
+        String token = authorizationHeader.substring(7);
+
+        if (jwtUtil.isTokenInvalid(token)) {
+            chain.doFilter(request, response);
+            return;
+        }
+
+        if (logoutTokenRepository.existsById(token)) {
+            log.info("블랙리스트에 있는 토큰으로 요청이 들어왔습니다.");
+            response.setStatus(ErrorCode.LOGOUT_TOKEN_BLACKLISTED.getStatus());
+            response.setContentType("application/json;charset=UTF-8");
+            String body = String.format("{\"code\":\"%s\", \"message\":\"%s\"}",
+                    ErrorCode.LOGOUT_TOKEN_BLACKLISTED.getCode(),
+                    ErrorCode.LOGOUT_TOKEN_BLACKLISTED.getMessage());
+            response.getWriter().write(body);
+            response.getWriter().flush();
+            return;
+        }
+
+        try {
+            UserDto userDto = jwtUtil.getUserInfoFromToken(token);
+            setAuthentication(userDto.getEmail());
+        } catch (Exception e) {
+            log.error("JWT 인증 실패: {}", e.getMessage());
+            // 인증 실패해도 계속 진행
         }
 
         chain.doFilter(request, response);

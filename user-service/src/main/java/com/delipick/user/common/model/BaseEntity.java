@@ -50,4 +50,10 @@ public abstract class BaseEntity {
         this.deletedBy = deletedBy;
         this.isDeleted = true;
     }
+
+    public void restore() {
+        this.deletedAt = null;
+        this.deletedBy = null;
+        this.isDeleted = false;
+    }
 }
