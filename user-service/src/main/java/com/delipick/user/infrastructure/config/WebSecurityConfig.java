@@ -45,6 +45,7 @@ public class WebSecurityConfig {
         http.authorizeHttpRequests(authz -> authz
                         .requestMatchers("/api/auth/login", "/api/auth/register", "/api/auth/reactivate").permitAll()
                         .requestMatchers("/api/users/email-exists", "/api/users/phone-exists").permitAll()
+                        .requestMatchers("/api/email-auth", "/api/email-auth/verify").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

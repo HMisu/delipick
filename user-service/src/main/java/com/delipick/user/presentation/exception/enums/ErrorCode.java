@@ -25,7 +25,8 @@ public enum ErrorCode {
     USER_ALREADY_ACTIVE(409, "E4094", "이미 활성화된 계정입니다."),
     LOGOUT_TOKEN_SAVE_FAILURE(500, "E5002", "로그아웃 토큰 저장에 실패했습니다."),
     USER_DELETION_FAILED(500, "E5003", "회원 탈퇴에 실패했습니다."),
-    INTERNAL_ERROR(500, "E5001", "서버 내부 오류입니다.");
+    INTERNAL_ERROR(500, "E5001", "서버 내부 오류입니다."),
+    EMAIL_SEND_FAILURE(500, "E5004", "이메일 전송에 실패했습니다.");
 
     private final int status;
     private final String code;
